@@ -1,0 +1,23 @@
+{% if books %}
+    <div class="mb-3">
+        {% if search_query %}
+            <h4>Search results for "{{ search_query }}"</h4>
+        {% elif selected_category %}
+            <h4>Found books in {{ selected_category }}</h4>
+        {% endif %}
+    </div>
+    
+    <div class="row row-cols-1 row-cols-md-4 g-4" id="booksContainer">
+        {% include 'book_cards.html' %}
+    </div>
+
+    {% if has_more %}
+    <div class="text-center mt-4 mb-4">
+        <button id="loadMoreBtn" class="btn btn-outline-primary" data-page="2">
+            Load More Books
+        </button>
+    </div>
+    {% endif %}
+{% else %}
+    <div class="alert alert-info">No books found matching your criteria.</div>
+{% endif %} 
