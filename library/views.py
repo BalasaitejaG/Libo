@@ -579,6 +579,37 @@ def search_books(request):
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return JsonResponse({'error': str(e)}, status=500)
             messages.error(request, f'Error fetching books: {str(e)}')
+    else:
+        # Show random books if no search query or category is provided
+        try:
+            url = "https://www.googleapis.com/books/v1/volumes?q=random&maxResults=40"
+            response = requests.get(url, timeout=10)
+            data = response.json()
+            
+            if 'items' in data:
+                for item in data['items']:
+                    book_info = item['volumeInfo']
+                    isbn = None
+                    for identifier in book_info.get('industryIdentifiers', []):
+                        if identifier['type'] == 'ISBN_13':
+                            isbn = identifier['identifier']
+                            break
+                        elif identifier['type'] == 'ISBN_10':
+                            isbn = identifier['identifier']
+                    
+                    if isbn:  # Only add books with valid ISBNs
+                        books.append({
+                            'title': book_info.get('title', ''),
+                            'authors': ', '.join(book_info.get('authors', [])),
+                            'isbn': isbn,
+                            'description': book_info.get('description', ''),
+                            'categories': book_info.get('categories', [])[0] if book_info.get('categories') else '',
+                            'page_count': book_info.get('pageCount', 0),
+                            'thumbnail': book_info.get('imageLinks', {}).get('thumbnail', ''),
+                            'preview_link': book_info.get('previewLink', '')
+                        })
+        except Exception as e:
+            messages.error(request, f'Error fetching random books: {str(e)}')
     
     return render(request, "search_books.html", {
         'books': books,
