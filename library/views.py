@@ -15,6 +15,7 @@ import requests
 from django.http import JsonResponse
 from django.db.models import Q
 from django.template.loader import render_to_string
+from django.shortcuts import render, redirect, get_object_or_404
 
 
 def index(request):
@@ -114,10 +115,20 @@ def view_books(request):
             'sort_by': '-added_date'
         })
 
+from django.db.models import Q
+
 @login_required(login_url = '/student_login')
 def student_view_books(request):
-    books = Book.objects.all()
-    return render(request, "student_view_books.html", {'books':books})
+    search_query = request.GET.get('q')
+    if search_query:
+        books = Book.objects.filter(
+            Q(name__icontains=search_query) |
+            Q(author__icontains=search_query) |
+            Q(isbn__icontains=search_query)
+        )
+    else:
+        books = Book.objects.all()
+    return render(request, "student_view_books.html", {'books': books})
 
 @login_required(login_url = '/admin_login')
 def view_students(request):
@@ -610,3 +621,11 @@ def add_book_from_api(request):
             messages.error(request, f'Error adding book: {str(e)}')
             
     return redirect('search_books')
+
+def delete_request(request, request_id):
+    book_request = get_object_or_404(BookRequest, id=request_id)
+    if request.method == "POST":
+        book_request.delete()
+        messages.success(request, "Book request deleted successfully.")
+        return redirect("view_requests")
+    return render(request, "view_requests.html")

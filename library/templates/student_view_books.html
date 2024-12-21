@@ -1,11 +1,22 @@
 {% extends 'student_navbar.html' %}
 {% load static %}
 {% block title %} Library Management System {% endblock %}
+
 {% block css %}
 {% endblock %}
+
 {% block body %}
 <div class="container mt-4">
     <h1 class="text-center"><u>All Books List</u></h1>
+
+    <div class="row mb-3">
+        <div class="col-md-8 offset-md-2">
+            <form class="d-flex" method="get" action="{% url 'student_view_books' %}">
+                <input class="form-control me-2" type="search" placeholder="Search by Name, Author, or ISBN" name="q" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
 
     {% if messages %}
     <div class="messages mb-4">

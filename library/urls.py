@@ -15,6 +15,7 @@ urlpatterns = [
     path("edit_profile/", views.edit_profile, name="edit_profile"),
 
     path("student_registration/", views.student_registration, name="student_registration"),
+    path("student_view_books/", views.student_view_books, name="student_view_books"),
     path("change_password/", views.change_password, name="change_password"),
     path("student_login/", views.student_login, name="student_login"),
     path("admin_login/", views.admin_login, name="admin_login"),
@@ -30,4 +31,5 @@ urlpatterns = [
     path("add_book_from_api/", views.add_book_from_api, name="add_book_from_api"),
     path('student/login/', views.student_login, name='student_login'),
     path('student/register/', views.student_registration, name='student_registration'),
+    path("delete_request/<int:request_id>/", views.delete_request, name="delete_request"),
 ]

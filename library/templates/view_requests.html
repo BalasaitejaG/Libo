@@ -31,6 +31,7 @@
                 <th>Book Name</th>
                 <th>Request Date</th>
                 <th>Status</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -43,6 +44,16 @@
                     <span class="badge {% if request.status == 'approved' %}bg-success{% elif request.status == 'rejected' %}bg-danger{% else %}bg-warning{% endif %}">
                         {{request.status|title}}
                     </span>
+                </td>
+                <td>
+                    {% if request.status == 'pending' %}
+                    <form method="post" action="{% url 'delete_request' request.id %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i> Delete
+                        </button>
+                    </form>
+                    {% endif %}
                 </td>
             </tr>
             {% endfor %}
