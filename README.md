@@ -1,4 +1,4 @@
-# Library Management System
+# Libo - A Online library managnemt system
 
 A comprehensive digital library management system built with Python and Django that helps librarians and users manage books, memberships, and transactions efficiently.
 
